@@ -200,30 +200,30 @@ class MainController extends Controller
 
     public function submitNewMonthlyClient(Request $request)
     {
-        // $parameters = $request->all();
-        // $this->soapWrapper->add('Estacenter', function ($service) {
-        //     $service
-        //         ->wsdl($this->wsdl)
-        //         ->trace(true)
-        //         ->options($this->credentials)
-        //         ->classmap([
-        //             GetConsultaLocale::class,
-        //             GetConsultaLocaleResponse::class,
-        //         ]);
-        // });
+        $parameters = $request->all();
+        $this->soapWrapper->add('Estacenter', function ($service) {
+            $service
+                ->wsdl($this->wsdl)
+                ->trace(true)
+                ->options($this->credentials)
+                ->classmap([
+                    GetConsultaLocale::class,
+                    GetConsultaLocaleResponse::class,
+                ]);
+        });
 
-        // $response = $this->soapWrapper->call('Estacenter.cadastrarMensalista', [
-        //     'login' => 'uAppIntegr',
-        //     'password' => 'G4J19J2!&*#',
-        //     'enc' => '',
-        //     'parameters' => $parameters
-        // ]);
+        $response = $this->soapWrapper->call('Estacenter.cadastrarMensalista', [
+            'login' => 'uAppIntegr',
+            'password' => 'G4J19J2!&*#',
+            'enc' => '',
+            'parameters' => $parameters
+        ]);
 
-        // $this->soapWrapper->client('Estacenter', function ($client) {
-        //     Log::info($client->getLastRequest());
-        // });
+        $this->soapWrapper->client('Estacenter', function ($client) {
+            Log::info($client->getLastRequest());
+        });
 
-        return response()->json([]);
+        return response()->json($response);
     }
 
     public function getPdf(Request $request)
