@@ -276,7 +276,7 @@ class MainController extends Controller
                 $contents   = base64_decode($response->prRetorno);
 
                 file_put_contents($path, $contents);
-                return response()->download($path)->deleteFileAfterSend(true);
+                return response()->download($path, $fileName . '.pdf')->deleteFileAfterSend(true);
             }
         } else {
             $errors = $validator->errors();
