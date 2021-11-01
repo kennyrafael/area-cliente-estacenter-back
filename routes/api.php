@@ -21,5 +21,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('/get-titles', [MainController::class, 'listTitles']);
 Route::post('/get-locales', [MainController::class, 'listLocales']);
+Route::post('/check-email', [MainController::class, 'checkEmail']);
+Route::post('/check-document', [MainController::class, 'checkDocument']);
 Route::post('/submit-monthly-client', [MainController::class, 'submitNewMonthlyClient']);
 Route::get('/get-pdf', [MainController::class, 'getPdf']);

@@ -78,6 +78,106 @@ class MainController extends Controller
         }
     }
 
+    public function checkDocument(Request $request)
+    {
+        $parameters = $request->all();
+
+        $rules =  array(
+            'cpfCnpj'    => 'required'
+        );
+
+        $messages = array(
+            'cpfCnpj.required' => 'CPF/CNPJ é obrigatório.'
+        );
+
+        $validator = Validator::make($parameters, $rules, $messages);
+
+        if (!$validator->fails()) {
+            $this->soapWrapper->add('Estacenter', function ($service) {
+                $service
+                    ->wsdl($this->wsdl)
+                    ->trace(true)
+                    ->options($this->credentials)
+                    ->classmap([
+                        GetConsultaTitulos::class,
+                        GetConsultaTitulosResponse::class,
+                    ]);
+            });
+
+            $response = $this->soapWrapper->call('Estacenter.consultaTitulos', [
+                'login' => 'uAppIntegr',
+                'password' => 'G4J19J2!&*#',
+                'enc' => '',
+                'parameters' => [
+                    'cpfCnpj' => $parameters['cpfCnpj']
+                ]
+            ]);
+            $this->soapWrapper->client('Estacenter', function ($client) {
+                Log::info($client->getLastRequest());
+            });
+
+            if (!$response->erroExecucao && $response->emaCli) {
+                return response()->json(true);
+            }
+
+            return response()->json(false);
+        } else {
+            $errors = $validator->errors();
+            return response()->json(false);
+        }
+    }
+
+    public function checkEmail(Request $request)
+    {
+        $parameters = $request->all();
+
+        $rules =  array(
+            'cpfCnpj'    => 'required',
+            'emaCli'    => 'required'
+        );
+
+        $messages = array(
+            'cpfCnpj.required' => 'CPF/CNPJ é obrigatório.',
+            'emaCli.required' => 'Email é obrigatório.'
+        );
+
+        $validator = Validator::make($parameters, $rules, $messages);
+
+        if (!$validator->fails()) {
+            $this->soapWrapper->add('Estacenter', function ($service) {
+                $service
+                    ->wsdl($this->wsdl)
+                    ->trace(true)
+                    ->options($this->credentials)
+                    ->classmap([
+                        GetConsultaTitulos::class,
+                        GetConsultaTitulosResponse::class,
+                    ]);
+            });
+
+            $response = $this->soapWrapper->call('Estacenter.consultaTitulos', [
+                'login' => 'uAppIntegr',
+                'password' => 'G4J19J2!&*#',
+                'enc' => '',
+                'parameters' => [
+                    'cpfCnpj' => $parameters['cpfCnpj']
+                ]
+            ]);
+            $this->soapWrapper->client('Estacenter', function ($client) {
+                Log::info($client->getLastRequest());
+            });
+
+            if (!$response->erroExecucao && $response->emaCli === $parameters['emaCli']) {
+                return response()->json(true);
+            }
+
+            return response()->json(false);
+        } else {
+            $errors = $validator->errors();
+            return response()->json(false);
+        }
+    }
+
     public function listLocales()
     {
         $this->soapWrapper->add('Estacenter', function ($service) {
